@@ -20,28 +20,54 @@ def get_weather_data():
     ipstack_API_KEY = "0d08445765516e3fb5265bad0788f891"
     geo_lookup = GeoLookup(ipstack_API_KEY)  # API KEY FOR IPSTACK
     location_info = geo_lookup.get_own_location()
-    print("Location Info: \n")
-    for items in location_info:
-        print(items)
+    data_display.insert(END, "Region: " + location_info['region_name']+", "+location_info['country_name']+"\n ")
 
     baseURL = "http://api.openweathermap.org/data/2.5/weather?"
     openweathermap_API_KEY = "0da443e6847a8634a3cd2103be39cc53"
-    URL = baseURL + "q=" + str(geo_lookup.get_own_location()['city']) + "&appid=" + openweathermap_API_KEY
+    URL = baseURL + "q=" + str(geo_lookup.get_own_location()['city']) + "&units=metric" + "&appid=" + openweathermap_API_KEY
     req = requests.get(url=URL)
     data = req.json()
-    print("\n\nKeys: ")
-    for keys in data:
-        print(keys)
+    data_display.insert(END, "\nWeather: " + str(data['weather'][0]['main']) + "y")
+    data_display.insert(END, "\ntemperature: " + str(data['main']['temp']) + " degree Celsius")
+    data_display.insert(END, "\nMin temperature: " + str(data['main']['temp_min']) + " degree Celsius")
+    data_display.insert(END, "\nMax temperature: " + str(data['main']['temp_max']) + " degree Celsius")
+
 
 
 root = Tk()
 root.title("Weather App")
 root.geometry("720x480")
 
-inputFrame = Frame(root, bg="red", width=200)
-inputFrame.pack()
+frame = Frame(root)
+frame.pack()
+
+inputFrame = Frame(root, width=100)
+inputFrame.pack(side="left")
+
 submitBtn = Button(inputFrame, text="Get Data", command=get_weather_data)
-submitBtn.pack(side="left")
+submitBtn.pack()
+
+displayFrame = Frame(root)
+displayFrame.pack(side="right")
+
+data_display = Text(displayFrame)
+data_display.pack()
+
+
 
 
 root.mainloop()
+
+#   {'coord': {'lon': 90.41, 'lat': 23.73},
+#   'weather': [{'id': 721, 'main': 'Haze', 'description': 'haze', 'icon': '50n'}],
+#   'base': 'stations',
+#   'main': {'temp': 25, 'feels_like': 25.54, 'temp_min': 25, 'temp_max': 25, 'pressure': 1014, 'humidity': 61},
+#   'visibility': 4000,
+#   'wind': {'speed': 2.6, 'deg': 280},
+#   'clouds': {'all': 0},
+#   'dt': 1606567715,
+#   'sys': {'type': 1, 'id': 9145, 'country': 'BD', 'sunrise': 1606522930, 'sunset': 1606561857},
+#   'timezone': 21600,
+#   'id': 1185241,
+#   'name': 'Paltan',
+#   'cod': 200}
