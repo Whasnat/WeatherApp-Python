@@ -6,83 +6,88 @@
 #   IPSTACK can also be used for looking up geolocation of any IP
 
 
-import json
-import requests
 from ipstack import GeoLookup
 from tkinter import *
+import requests
+import json
 
-def get_loaction():
-    # my ipstack API_KEY
-    ipstack_API_KEY = "0d08445765516e3fb5265bad0788f891"
-    geo_lookup = GeoLookup(ipstack_API_KEY)  # GEO LOOK-UP INSTANCE
-    cityName = city_nameInput.get()
 
-    if cityName == "":
-        # GET LOCATION  WITH ipstack
+# GET LOCATION INFO
+def get_location():
+    ipstack_API_KEY = "0d08445765516e3fb5265bad0788f891"    # MY IPSTACK API_KEY
+    geo_lookup = GeoLookup(ipstack_API_KEY)     # GEO LOOK-UP INSTANCE
+    city_name = city_nameInput.get()
+
+    if city_name == "":
+        # GET DEVICE_IP LOCATION
         location_info = geo_lookup.get_own_location()
         print(type(location_info))
-        data_display.insert(END, json.dumps(location_info, indent=2))  # debug
+        print(json.dumps(location_info, indent=2))
+        # data_display.insert(END, json.dumps(location_info, indent=2))  # debug
+        data_display.insert(END,
+                            "Region: " + location_info['region_name'] + ", " + location_info['country_name'] + "\n")
         get_weather_data(location_info['city'])
+
     else:
-        get_weather_data(cityName)
+        get_weather_data(city_name)
 
+
+# GET WEATHER DATA
 def get_weather_data(location):
-
-    # data_display.insert(END, "Region: " + location_info['region_name']+", "+location_info['country_name']+"\n ")
-
     baseURL = "http://api.openweathermap.org/data/2.5/weather?"
     openweathermap_API_KEY = "0da443e6847a8634a3cd2103be39cc53"
     URL = baseURL + "q=" + str(location) + "&units=metric" + "&appid=" + openweathermap_API_KEY
     req = requests.get(url=URL)
     data = req.json()
+    print("\n\n\n")
+    print(type(data))
     print(json.dumps(data, indent=4, sort_keys=True))
-    data_display.insert(END, json.dumps(data, indent=4, sort_keys=True))       #debug
+
+    # data_display.insert(END, json.dumps(data, indent=4, sort_keys=True))       #debug
+
     data_display.insert(END, "\nWeather: " + str(data['weather'][0]['main']) + "y")
-    data_display.insert(END, "\ntemperature: " + str(data['main']['temp']) + " degree Celsius")
-    data_display.insert(END, "\nMin temperature: " + str(data['main']['temp_min']) + " degree Celsius")
-    data_display.insert(END, "\nMax temperature: " + str(data['main']['temp_max']) + " degree Celsius")
+    if temperature.get():
+        data_display.insert(END, "\ntemperature: " + str(data['main']['temp']) + " degree Celsius")
+        data_display.insert(END, "\nMin temperature: " + str(data['main']['temp_min']) + " degree Celsius")
+        data_display.insert(END, "\nMax temperature: " + str(data['main']['temp_max']) + " degree Celsius")
+
+    data_display.insert(END, "\nSunrise: " + str(data['sys']['sunrise']))
 
 
-
+# DEFINE ROOT AND MAIN-FRAME
 root = Tk()
 root.title("Weather App")
 root.geometry("720x480")
-
 frame = Frame(root)
 frame.pack()
 
-inputFrame = Frame(root, width=100)
+
+# INPUT FRAME FOR USER ENTRY AND BUTTONS
+inputFrame = Frame(frame, width=100)
 inputFrame.pack(side="left")
 
 # GET USER INPUT
 cityNameVar = StringVar()
 city_nameInput = Entry(inputFrame, textvariable=cityNameVar)
-city_nameInput.pack(side="top")
+city_nameInput.grid(row=0, column=0, sticky=W)
+# city_nameInput.pack(side="right")
 
-submitBtn = Button(inputFrame, text="Get Data", command=get_loaction)
-submitBtn.pack()
+# CHECK BOXES
+temperature = IntVar()
+Checkbutton(inputFrame, text="temp", variable=temperature).grid(row=0, column=1, sticky=W)
+wind = IntVar()
+Checkbutton(inputFrame, text="wind", variable=wind).grid(row=0, column=2, sticky=W)
 
-displayFrame = Frame(root)
+# GET DATA BUTTON
+submitBtn = Button(inputFrame, text="Get Data", command=get_location)
+submitBtn.grid(row=1, column=0, sticky=W)
+# submitBtn.pack(side="left")
+
+# TEXT WIDGET
+displayFrame = Frame(frame)
 displayFrame.pack(side="right")
-
 data_display = Text(displayFrame)
 data_display.pack()
 
 
-
-
 root.mainloop()
-
-#   {'coord': {'lon': 90.41, 'lat': 23.73},
-#   'weather': [{'id': 721, 'main': 'Haze', 'description': 'haze', 'icon': '50n'}],
-#   'base': 'stations',
-#   'main': {'temp': 25, 'feels_like': 25.54, 'temp_min': 25, 'temp_max': 25, 'pressure': 1014, 'humidity': 61},
-#   'visibility': 4000,
-#   'wind': {'speed': 2.6, 'deg': 280},
-#   'clouds': {'all': 0},
-#   'dt': 1606567715,
-#   'sys': {'type': 1, 'id': 9145, 'country': 'BD', 'sunrise': 1606522930, 'sunset': 1606561857},
-#   'timezone': 21600,
-#   'id': 1185241,
-#   'name': 'Paltan',
-#   'cod': 200}

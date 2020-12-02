@@ -1,0 +1,77 @@
+Device IP Location:
+{
+  "ip": "***.***.***.***",
+  "type": "ipv4",
+  "continent_code": "AS",
+  "continent_name": "Asia",
+  "country_code": "**",
+  "country_name": "********",
+  "region_code": "C",
+  "region_name": "****",
+  "city": "****",
+  "zip": "****",
+  "latitude": *****,
+  "longitude": ******,
+  "location": {
+    "geoname_id": ****,
+    "capital": "****",
+    "languages": [
+      {
+        "code": "bn",
+        "name": "Bengali",
+        "native": "\u09ac\u09be\u0982\u09b2\u09be"
+      }
+    ],
+    "country_flag": "http://assets.ipstack.com/flags/bd.svg",
+    "country_flag_emoji": "\ud83c\udde7\ud83c\udde9",
+    "country_flag_emoji_unicode": "U+1F1E7 U+1F1E9",
+    "calling_code": "880",
+    "is_eu": false
+  }
+}
+
+Weather Data
+{
+    "base": "stations",
+    "clouds": {
+        "all": 20
+    },
+    "cod": 200,
+    "coord": {
+        "lat": *****,
+        "lon": *****
+    },
+    "dt": 1606918699,
+    "id": 1185241,
+    "main": {
+        "feels_like": 26.93,
+        "humidity": 69,
+        "pressure": 1012,
+        "temp": 25,
+        "temp_max": 25,
+        "temp_min": 25
+    },
+    "name": "Paltan",
+    "sys": {
+        "country": "BD",
+        "id": 9145,
+        "sunrise": 1606868696,
+        "sunset": 1606907466,
+        "type": 1
+    },
+    "timezone": 21600,
+    "visibility": 3500,
+    "weather": [
+        {
+            "description": "haze",
+            "icon": "50n",
+            "id": 721,
+            "main": "Haze"
+        }
+    ],
+    "wind": {
+        "deg": 349,
+        "speed": 1.8
+    }
+}
+
