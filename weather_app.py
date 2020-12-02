@@ -1,9 +1,9 @@
 #!/usr/bin/env  python
 
-#   WEATHER APP USING OPENWEATHERMAP API.
-#   OPENWEATHERMAP DOCUMENTATION: https://openweathermap.org/api
+#   WEATHER APP USING OPEN-WEATHER-MAP API.
+#   OPEN-WEATHER-MAP DOCUMENTATION: https://openweathermap.org/api
 #   IMPORT ipstack API as a MODULE for current IP location info.
-#   it can also be used for looking up geolocation of any IP
+#   IPSTACK can also be used for looking up geolocation of any IP
 
 
 import json
@@ -12,14 +12,19 @@ from ipstack import GeoLookup
 from tkinter import *
 
 def get_loaction():
-    # GET LOCATION  WITH ipstack
+    # my ipstack API_KEY
     ipstack_API_KEY = "0d08445765516e3fb5265bad0788f891"
-    geo_lookup = GeoLookup(ipstack_API_KEY)  # API KEY FOR IPSTACK
-    location_info = geo_lookup.get_own_location()
-    print(type(location_info))
-    data_display.insert(END, json.dumps(location_info, indent=2))   # debug
-    get_weather_data(location_info['country_name'])
+    geo_lookup = GeoLookup(ipstack_API_KEY)  # GEO LOOK-UP INSTANCE
+    cityName = city_nameInput.get()
 
+    if cityName == "":
+        # GET LOCATION  WITH ipstack
+        location_info = geo_lookup.get_own_location()
+        print(type(location_info))
+        data_display.insert(END, json.dumps(location_info, indent=2))  # debug
+        get_weather_data(location_info['city'])
+    else:
+        get_weather_data(cityName)
 
 def get_weather_data(location):
 
@@ -48,6 +53,11 @@ frame.pack()
 
 inputFrame = Frame(root, width=100)
 inputFrame.pack(side="left")
+
+# GET USER INPUT
+cityNameVar = StringVar()
+city_nameInput = Entry(inputFrame, textvariable=cityNameVar)
+city_nameInput.pack(side="top")
 
 submitBtn = Button(inputFrame, text="Get Data", command=get_loaction)
 submitBtn.pack()
