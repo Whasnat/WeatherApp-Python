@@ -11,22 +11,27 @@ import requests
 from ipstack import GeoLookup
 from tkinter import *
 
-#
-# class WeatherApp(Frame):
-#     def
-
-def get_weather_data():
+def get_loaction():
     # GET LOCATION  WITH ipstack
     ipstack_API_KEY = "0d08445765516e3fb5265bad0788f891"
     geo_lookup = GeoLookup(ipstack_API_KEY)  # API KEY FOR IPSTACK
     location_info = geo_lookup.get_own_location()
-    data_display.insert(END, "Region: " + location_info['region_name']+", "+location_info['country_name']+"\n ")
+    print(type(location_info))
+    data_display.insert(END, json.dumps(location_info, indent=2))   # debug
+    get_weather_data(location_info['country_name'])
+
+
+def get_weather_data(location):
+
+    # data_display.insert(END, "Region: " + location_info['region_name']+", "+location_info['country_name']+"\n ")
 
     baseURL = "http://api.openweathermap.org/data/2.5/weather?"
     openweathermap_API_KEY = "0da443e6847a8634a3cd2103be39cc53"
-    URL = baseURL + "q=" + str(geo_lookup.get_own_location()['city']) + "&units=metric" + "&appid=" + openweathermap_API_KEY
+    URL = baseURL + "q=" + str(location) + "&units=metric" + "&appid=" + openweathermap_API_KEY
     req = requests.get(url=URL)
     data = req.json()
+    print(json.dumps(data, indent=4, sort_keys=True))
+    data_display.insert(END, json.dumps(data, indent=4, sort_keys=True))       #debug
     data_display.insert(END, "\nWeather: " + str(data['weather'][0]['main']) + "y")
     data_display.insert(END, "\ntemperature: " + str(data['main']['temp']) + " degree Celsius")
     data_display.insert(END, "\nMin temperature: " + str(data['main']['temp_min']) + " degree Celsius")
@@ -44,7 +49,7 @@ frame.pack()
 inputFrame = Frame(root, width=100)
 inputFrame.pack(side="left")
 
-submitBtn = Button(inputFrame, text="Get Data", command=get_weather_data)
+submitBtn = Button(inputFrame, text="Get Data", command=get_loaction)
 submitBtn.pack()
 
 displayFrame = Frame(root)
