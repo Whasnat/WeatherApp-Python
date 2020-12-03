@@ -49,7 +49,16 @@ def get_weather_data(location):
     if temperature.get():
         data_display.insert(END, "\ntemperature: " + str(data['main']['temp']) + " degree Celsius")
         data_display.insert(END, "\nMin temperature: " + str(data['main']['temp_min']) + " degree Celsius")
-        data_display.insert(END, "\nMax temperature: " + str(data['main']['temp_max']) + " degree Celsius")
+        data_display.insert(END, "\nMax temperature: " + str(data['ma`in']['temp_max']) + " degree Celsius")
+
+    if wind.get():
+        wind_speed = ((data['wind']['speed'])*5)/18
+        print(type(wind_speed))
+        data_display.insert(END, f"\nWind speed: {wind_speed} km/h")
+
+    if latlong.get():
+        location = "\nLatitude: "+str(data['coord']['lat']) + "\nLongitude: " + str(data['coord']['lon'])
+        data_display.insert(END, location)
 
     data_display.insert(END, "\nSunrise: " + str(data['sys']['sunrise']))
 
@@ -77,6 +86,8 @@ temperature = IntVar()
 Checkbutton(inputFrame, text="temp", variable=temperature).grid(row=0, column=1, sticky=W)
 wind = IntVar()
 Checkbutton(inputFrame, text="wind", variable=wind).grid(row=0, column=2, sticky=W)
+latlong = IntVar()
+Checkbutton(inputFrame, text="location", variable=latlong).grid(row=0, column=3, sticky=W)
 
 # GET DATA BUTTON
 submitBtn = Button(inputFrame, text="Get Data", command=get_location)
