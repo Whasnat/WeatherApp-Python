@@ -11,6 +11,9 @@ from tkinter import *
 import requests
 import json
 
+import time
+
+
 
 # GET LOCATION INFO
 def get_location():
@@ -18,9 +21,11 @@ def get_location():
     geo_lookup = GeoLookup(ipstack_API_KEY)     # GEO LOOK-UP INSTANCE
     city_name = city_nameInput.get()
 
+    # GET DEVICE_IP LOCATION
+    location_info = geo_lookup.get_own_location()
+
     if city_name == "":
-        # GET DEVICE_IP LOCATION
-        location_info = geo_lookup.get_own_location()
+
         print(type(location_info))
         print(json.dumps(location_info, indent=2))
         # data_display.insert(END, json.dumps(location_info, indent=2))  # debug
@@ -29,7 +34,7 @@ def get_location():
         get_weather_data(location_info['city'])
 
     else:
-        get_weather_data(city_name)
+        get_weather_data(location_info)
 
 
 # GET WEATHER DATA
@@ -49,18 +54,25 @@ def get_weather_data(location):
     if temperature.get():
         data_display.insert(END, "\ntemperature: " + str(data['main']['temp']) + " degree Celsius")
         data_display.insert(END, "\nMin temperature: " + str(data['main']['temp_min']) + " degree Celsius")
-        data_display.insert(END, "\nMax temperature: " + str(data['ma`in']['temp_max']) + " degree Celsius")
+        data_display.insert(END, "\nMax temperature: " + str(data['main']['temp_max']) + " degree Celsius")
 
     if wind.get():
         wind_speed = ((data['wind']['speed'])*5)/18
         print(type(wind_speed))
         data_display.insert(END, f"\nWind speed: {wind_speed} km/h")
 
-    if latlong.get():
-        location = "\nLatitude: "+str(data['coord']['lat']) + "\nLongitude: " + str(data['coord']['lon'])
+    if lat_long.get():
+        location = "\nLatitude: " + str(data['coord']['lat']) + "\nLongitude: " + str(data['coord']['lon'])
         data_display.insert(END, location)
 
-    data_display.insert(END, "\nSunrise: " + str(data['sys']['sunrise']))
+    # TIME STAMP FROM WEATHER DATA
+    time_stamp = (data['sys']['sunrise'])
+    data_display.insert(END,
+                        "\nSunrise: " + time.strftime("%D %H:%M", time.localtime(time_stamp)))     # CONVERT TO LOCALTIME
+
+
+def get_daily_weather_data():
+    pass
 
 
 # DEFINE ROOT AND MAIN-FRAME
@@ -86,8 +98,8 @@ temperature = IntVar()
 Checkbutton(inputFrame, text="temp", variable=temperature).grid(row=0, column=1, sticky=W)
 wind = IntVar()
 Checkbutton(inputFrame, text="wind", variable=wind).grid(row=0, column=2, sticky=W)
-latlong = IntVar()
-Checkbutton(inputFrame, text="location", variable=latlong).grid(row=0, column=3, sticky=W)
+lat_long = IntVar()
+Checkbutton(inputFrame, text="location", variable=lat_long).grid(row=0, column=3, sticky=W)
 
 # GET DATA BUTTON
 submitBtn = Button(inputFrame, text="Get Data", command=get_location)
@@ -99,6 +111,5 @@ displayFrame = Frame(frame)
 displayFrame.pack(side="right")
 data_display = Text(displayFrame)
 data_display.pack()
-
 
 root.mainloop()
