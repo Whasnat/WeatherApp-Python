@@ -25,7 +25,7 @@ def get_location():
     location_info = geo_lookup.get_own_location()
 
     if city_name == "":
-
+        data_display.delete("1.0", END)
         print(type(location_info))
         print(json.dumps(location_info, indent=2))
         # data_display.insert(END, json.dumps(location_info, indent=2))  # debug
