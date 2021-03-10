@@ -30,7 +30,7 @@ def get_location():
         print(json.dumps(location_info, indent=2))
         # data_display.insert(END, json.dumps(location_info, indent=2))  # debug
         data_display.insert(END,
-                            "Region: " + location_info['region_name'] + ", " + location_info['country_name'] + "\n")
+                            "Region: " + location_info['region_name'] + ", " + location_info['country_name'] +"\n" +"City: "+location_info['city'] + "\n")
         get_weather_data(location_info['city'])
 
     else:
@@ -83,6 +83,8 @@ frame = Frame(root)
 frame.pack()
 
 
+
+
 # INPUT FRAME FOR USER ENTRY AND BUTTONS
 inputFrame = Frame(frame, width=100)
 inputFrame.pack(side="left")
@@ -104,7 +106,7 @@ Checkbutton(inputFrame, text="location", variable=lat_long).grid(row=0, column=3
 # GET DATA BUTTON
 submitBtn = Button(inputFrame, text="Get Data", command=get_location)
 submitBtn.grid(row=1, column=0, sticky=W)
-# submitBtn.pack(side="left")
+#  submitBtn.pack(side="left")
 
 # TEXT WIDGET
 displayFrame = Frame(frame)
